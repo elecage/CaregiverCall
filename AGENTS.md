@@ -74,6 +74,7 @@
 
 - Windows Python 환경 설정: `.\scripts\setup_python_env.ps1`
 - macOS/Linux Python 환경 설정: `./scripts/setup_python_env.sh`
+- Windows 개발 환경 점검: `.\scripts\check_windows_dev_env.ps1`
 
 ## Git 주의사항
 

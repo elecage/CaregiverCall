@@ -15,6 +15,13 @@
 
 1차 목표는 ESP32-C3 Super Mini가 Google Home에서 Matter On/Off Switch로 표시되도록 만드는 것입니다.
 
+고정 버전:
+
+- ESP-IDF: `v5.4.1`
+- esp-matter: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter^1.4.2`
+- 개발 호스트: Windows + WSL2 Ubuntu
+- 기본 업로드 포트: Windows 기준 `COM10`
+
 Python 도구가 필요한 경우 저장소 로컬 `.venv`를 사용합니다.
 
 Windows PowerShell:
@@ -30,6 +37,134 @@ macOS/Linux:
 ```
 
 Python 의존성은 `requirements.txt`에 기록합니다.
+
+## Windows + WSL2 개발 환경
+
+Espressif Matter 개발은 Linux/macOS 또는 Windows의 WSL2 환경을 기준으로 준비합니다. 이 프로젝트는 Windows에서 WSL2 Ubuntu를 사용합니다.
+
+### 1. 현재 Windows 상태 확인
+
+PowerShell에서 다음 스크립트를 실행합니다.
+
+```powershell
+.\scripts\check_windows_dev_env.ps1
+```
+
+확인할 항목:
+
+- WSL 설치 여부
+- Ubuntu 배포판 설치 여부
+- WSL 버전이 2인지 여부
+- `usbipd-win` 설치 여부
+- ESP32-C3 보드가 `COM10`으로 보이는지 여부
+
+### 2. WSL2 설치
+
+관리자 권한 PowerShell에서 실행합니다.
+
+```powershell
+wsl --install
+```
+
+설치 후 Windows를 재시작하고 Ubuntu 초기 사용자 계정을 만듭니다.
+
+이미 WSL은 있지만 Ubuntu가 없으면 다음 명령으로 설치 가능한 배포판을 확인합니다.
+
+```powershell
+wsl --list --online
+wsl --install -d Ubuntu-22.04
+```
+
+설치 후 WSL2 여부를 확인합니다.
+
+```powershell
+wsl --list --verbose
+```
+
+Ubuntu가 WSL1이면 WSL2로 변경합니다.
+
+```powershell
+wsl --set-version Ubuntu-22.04 2
+```
+
+### 3. Ubuntu 기본 패키지 설치
+
+Ubuntu 터미널에서 실행합니다.
+
+```sh
+sudo apt update
+sudo apt install -y git wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+```
+
+### 4. ESP-IDF v5.4.1 설치
+
+Ubuntu 터미널에서 레포 외부 개발 도구 디렉터리에 설치합니다. 예시는 `~/esp`를 사용합니다.
+
+```sh
+mkdir -p ~/esp
+cd ~/esp
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+git checkout v5.4.1
+git submodule update --init --recursive
+./install.sh esp32c3
+```
+
+새 터미널을 열 때마다 ESP-IDF 환경을 불러옵니다.
+
+```sh
+source ~/esp/esp-idf/export.sh
+```
+
+### 5. esp-matter 준비
+
+1차 구현은 esp-matter `release/v1.4.2`를 기준으로 합니다.
+
+레포 외부에 전체 esp-matter SDK를 설치하는 방식:
+
+```sh
+cd ~/esp
+git clone --recursive https://github.com/espressif/esp-matter.git
+cd esp-matter
+git checkout release/v1.4.2
+git submodule update --init --recursive
+./install.sh
+source ./export.sh
+```
+
+또는 ESP-IDF 프로젝트 안에서 컴포넌트 의존성으로 추가하는 방식:
+
+```sh
+idf.py add-dependency "espressif/esp_matter^1.4.2"
+```
+
+초기 펌웨어 프로젝트를 만들 때 두 방식 중 하나를 선택하고 이 문서를 갱신합니다.
+
+### 6. USB / COM10 업로드 준비
+
+Windows에서는 ESP32-C3 Super Mini가 `COM10`으로 보인다고 가정합니다.
+
+Windows PowerShell에서 확인:
+
+```powershell
+Get-CimInstance Win32_SerialPort | Select-Object DeviceID, Name, Description
+```
+
+WSL2에서 직접 USB 장치를 사용해야 하면 `usbipd-win`을 설치합니다. 설치 후 관리자 권한 PowerShell에서:
+
+```powershell
+usbipd list
+usbipd bind --busid <BUSID>
+usbipd attach --wsl --busid <BUSID>
+```
+
+Ubuntu에서 연결된 장치를 확인합니다.
+
+```sh
+ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
+```
+
+WSL2에서 보이는 포트가 `/dev/ttyACM0` 또는 `/dev/ttyUSB0`이면 이후 업로드 명령에 해당 포트를 사용합니다.
 
 ## 개발보드
 

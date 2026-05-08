@@ -33,6 +33,12 @@ Windows PowerShell:
 .\scripts\setup_python_env.ps1
 ```
 
+Windows 개발 환경 점검:
+
+```powershell
+.\scripts\check_windows_dev_env.ps1
+```
+
 macOS/Linux:
 
 ```sh
