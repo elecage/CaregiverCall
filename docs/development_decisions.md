@@ -7,7 +7,7 @@
 | 항목 | 결정 |
 | --- | --- |
 | 펌웨어 스택 | ESP-IDF + esp-matter |
-| 개발 호스트 | Windows + WSL2 Ubuntu |
+| 개발 호스트 | Windows native ESP-IDF 우선 시도, esp-matter 전체 SDK/host tools가 필요하면 WSL2 Ubuntu |
 | ESP-IDF 버전 | v5.4.1 |
 | esp-matter 버전 | release/v1.4.2 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2` |
 | 기본 업로드 포트 | Windows 기준 `COM10` |
@@ -35,7 +35,8 @@
 
 - 먼저 Matter 기기가 Google Home에서 On/Off Switch 형태로 인식되도록 최소 펌웨어를 구성합니다.
 - 1차 목표에서는 Google Home에 Matter 스위치로 표시되는 것까지만 검증합니다.
-- Windows에서는 WSL2 Ubuntu 안에서 ESP-IDF와 esp-matter를 사용합니다.
+- 1차 펌웨어는 Windows native ESP-IDF에서 먼저 빌드/업로드를 시도할 수 있습니다.
+- esp-matter 전체 SDK, CHIP tool, host tools가 필요하면 WSL2 Ubuntu 안에서 ESP-IDF와 esp-matter를 사용합니다.
 - 보드 업로드는 Windows `COM10`을 기본 가정으로 시작하되, WSL2에서 직접 플래시해야 하면 `usbipd-win`으로 USB 장치를 연결합니다.
 - 버튼을 한 번 누르면 호출 상태가 활성화됩니다.
 - 호출 상태는 중복 전송을 막기 위해 짧은 시간 동안 재입력을 무시합니다.

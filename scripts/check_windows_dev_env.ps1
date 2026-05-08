@@ -3,6 +3,20 @@ $ErrorActionPreference = "Continue"
 Write-Host "CaregiverCall Windows development environment check"
 Write-Host ""
 
+Write-Host "[ESP-IDF / EIM]"
+if (Get-Command idf.py -ErrorAction SilentlyContinue) {
+    idf.py --version
+} else {
+    Write-Host "idf.py was not found in PATH. Open an ESP-IDF shell or install ESP-IDF with Espressif Installation Manager."
+}
+
+if (Get-Command eim.exe -ErrorAction SilentlyContinue) {
+    eim.exe --version
+} else {
+    Write-Host "eim.exe was not found in PATH. Install Espressif.EIM-CLI if you want CLI-based ESP-IDF installation."
+}
+
+Write-Host ""
 Write-Host "[WSL]"
 if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
     wsl.exe --status

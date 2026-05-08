@@ -19,7 +19,7 @@
 
 - ESP-IDF: `v5.4.1`
 - esp-matter: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2`
-- 개발 호스트: Windows + WSL2 Ubuntu
+- 개발 호스트: Windows native ESP-IDF 우선 시도, esp-matter 전체 SDK/host tools가 필요하면 WSL2 Ubuntu
 - 기본 업로드 포트: Windows 기준 `COM10`
 
 Python 도구가 필요한 경우 저장소 로컬 `.venv`를 사용합니다.
@@ -38,9 +38,63 @@ macOS/Linux:
 
 Python 의존성은 `requirements.txt`에 기록합니다.
 
+## Windows 개발 환경 선택
+
+ESP-IDF 자체는 Windows native 설치가 공식 지원됩니다. 따라서 1차 목표인 Matter On/Off Switch 펌웨어 빌드는 Windows ESP-IDF 환경에서 먼저 시도할 수 있습니다.
+
+다만 Espressif esp-matter 개발 문서는 Matter 개발 호스트로 Linux/macOS를 우선 안내하고, Windows에서는 WSL2 Ubuntu 사용을 안내합니다. esp-matter 전체 SDK, CHIP tool, 인증서/제조 도구, 기타 host tools가 필요해지면 WSL2 Ubuntu 경로로 전환합니다.
+
+권장 순서:
+
+1. Windows native ESP-IDF로 `src/firmware` 빌드와 `COM10` 업로드를 먼저 시도합니다.
+2. esp-matter 컴포넌트 빌드가 Windows에서 막히거나 host tools가 필요하면 WSL2 Ubuntu를 설치합니다.
+3. WSL2에서 직접 USB 플래시가 필요하면 `usbipd-win`을 사용합니다.
+
+## Windows native ESP-IDF 설치
+
+Espressif Installation Manager(EIM)를 사용합니다.
+
+PowerShell에서 EIM CLI를 설치할 수 있습니다.
+
+```powershell
+winget install Espressif.EIM-CLI
+```
+
+ESP-IDF v5.4.1을 설치합니다.
+
+```powershell
+eim install -i v5.4.1
+```
+
+GUI를 선호하면 `Espressif.EIM`을 설치하고 Custom Installation에서 ESP-IDF `v5.4.1`을 선택합니다.
+
+```powershell
+winget install Espressif.EIM
+```
+
+설치 후 "ESP-IDF PowerShell" 또는 EIM이 만든 ESP-IDF 터미널을 열어 확인합니다.
+
+```powershell
+idf.py --version
+```
+
+펌웨어 빌드:
+
+```powershell
+cd C:\Users\hmshim\.codex\worktrees\ef01\CaregiverCall\src\firmware
+idf.py set-target esp32c3
+idf.py build
+```
+
+업로드:
+
+```powershell
+idf.py -p COM10 flash monitor
+```
+
 ## Windows + WSL2 개발 환경
 
-Espressif Matter 개발은 Linux/macOS 또는 Windows의 WSL2 환경을 기준으로 준비합니다. 이 프로젝트는 Windows에서 WSL2 Ubuntu를 사용합니다.
+이 경로는 esp-matter 전체 SDK 또는 Linux host tools가 필요할 때 사용합니다.
 
 ### 1. 현재 Windows 상태 확인
 

@@ -7,7 +7,7 @@
 - 2026-05-08: [Firmware skeleton](docs/session_handoffs/2026-05-08-firmware-skeleton.md)
   - `src/firmware/`에 ESP-IDF + esp-matter 프로젝트 골격, Matter On/Off Plugin Unit endpoint, 외부 LED/MX1508 GPIO 드라이버를 추가했습니다.
 - 2026-05-08: [Windows WSL2 development setup](docs/session_handoffs/2026-05-08-windows-wsl2-dev-setup.md)
-  - Windows + WSL2 Ubuntu 개발 환경, ESP-IDF v5.4.1, esp-matter release/v1.4.2, COM10, usbipd-win 준비 절차를 정리했습니다.
+  - Windows native ESP-IDF 우선 개발, 필요 시 WSL2 Ubuntu, ESP-IDF v5.4.1, esp-matter release/v1.4.2, COM10, usbipd-win 준비 절차를 정리했습니다.
 - 2026-05-08: [First firmware target](docs/session_handoffs/2026-05-08-first-firmware-target.md)
   - 1차 목표를 Google Home에 Matter On/Off Switch로 표시하는 것으로 고정하고, 외부 LED, 3.3V 소형 진동 모터, MX1508 드라이버와 `GPIO6/7` 제어 핀을 확정했습니다.
 - 2026-05-08: [Development decisions](docs/session_handoffs/2026-05-08-development-decisions.md)
