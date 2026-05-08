@@ -22,6 +22,8 @@
 
 - Google Nest Mini를 기본 시험용 Matter Hub로 사용합니다.
 - Google Nest Mini는 보호자 확인 사실을 사용자에게 알려주는 음성 피드백 장치로도 사용합니다.
+- 초기 펌웨어는 ESP-IDF + esp-matter로 구현합니다.
+- 초기 Matter 표현은 Google Home에서 버튼 또는 스위치처럼 보이게 하는 방향으로 검증합니다.
 - 구현은 Google 전용 API나 특정 허브의 비표준 동작에 의존하지 않습니다.
 - 가능한 한 Matter 표준 클러스터, 표준 속성, 표준 커미셔닝 흐름을 우선합니다.
 - 다른 Matter Hub(예: Apple Home, Samsung SmartThings, Home Assistant 등)에서도 동작할 수 있도록 허브 종속 가정은 문서화합니다.
@@ -43,6 +45,7 @@
 - 저장소에 별도 규칙이 생기기 전까지 파일명과 디렉터리명은 명확한 영어 이름을 사용합니다.
 - 프로젝트 구조, 실행 방법, 테스트 방법이 정해지면 README.md와 이 파일을 함께 갱신합니다.
 - 제품 요구사항이나 사용자 흐름이 바뀌면 `docs/product_requirements.md`를 함께 갱신합니다.
+- 구현 전 확정 결정이나 남은 확인 항목이 바뀌면 `docs/development_decisions.md`를 갱신합니다.
 - 환경설정, 컴파일, 업로드 절차가 바뀌면 `docs/development_manual.md`를 갱신합니다.
 - Google Home 연결 절차가 바뀌면 `docs/setup_manual.md`를 갱신합니다.
 - 실제 사용자 흐름이나 보호자 사용 방법이 바뀌면 `docs/user_manual.md`를 갱신합니다.

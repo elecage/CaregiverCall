@@ -18,6 +18,7 @@ ESP32-C3 Super Mini 보드와 Matter를 이용한 보호자 호출 보조기기 
 ## 문서
 
 - [제품 요구사항](docs/product_requirements.md)
+- [개발 결정 사항](docs/development_decisions.md)
 - [개발 매뉴얼](docs/development_manual.md)
 - [셋업 매뉴얼](docs/setup_manual.md)
 - [사용 매뉴얼](docs/user_manual.md)
