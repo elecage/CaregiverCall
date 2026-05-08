@@ -4,6 +4,8 @@
 
 ## Entries
 
+- 2026-05-08: [First firmware target](docs/session_handoffs/2026-05-08-first-firmware-target.md)
+  - 1차 목표를 Google Home에 Matter On/Off Switch로 표시하는 것으로 고정하고, 외부 LED, 3.3V 소형 진동 모터, MX1508 드라이버 사용을 확정했습니다.
 - 2026-05-08: [Development decisions](docs/session_handoffs/2026-05-08-development-decisions.md)
   - ESP-IDF + esp-matter, 버튼/스위치 Matter 표현, Google Home 자동화 우선, LED + 진동 피드백, 큰 버튼 1회 입력, 재부팅 시 대기 초기화를 확정했습니다.
 - 2026-05-08: [Repository structure and manuals](docs/session_handoffs/2026-05-08-repository-structure-and-manuals.md)

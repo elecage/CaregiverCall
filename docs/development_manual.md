@@ -13,7 +13,7 @@
 
 펌웨어 스택은 ESP-IDF + esp-matter를 사용합니다.
 
-초기 목표는 ESP32-C3 Super Mini가 Google Home에서 버튼 또는 스위치처럼 보이는 Matter 기기로 인식되도록 만드는 것입니다.
+1차 목표는 ESP32-C3 Super Mini가 Google Home에서 Matter On/Off Switch로 표시되도록 만드는 것입니다.
 
 Python 도구가 필요한 경우 저장소 로컬 `.venv`를 사용합니다.
 
@@ -45,8 +45,8 @@ ESP32-C3 Super Mini 보드는 제조사와 판매처에 따라 핀 배치 표기
 초기 펌웨어 기준 핀 제안:
 
 - 호출 버튼: `GPIO4`
-- 상태 LED: `GPIO5`
-- 진동 모터 제어 신호: `GPIO6`
+- 외부 상태 LED: `GPIO5`
+- MX1508 진동 모터 드라이버 제어 신호: `GPIO6`
 - 전원: `3V3`, `GND`
 
 ```mermaid
@@ -54,12 +54,14 @@ flowchart LR
     Button["Call Button"] -->|"one side"| GND["ESP32-C3 GND"]
     Button -->|"other side"| GPIO4["ESP32-C3 GPIO4\ninput pull-up"]
     GPIO5["ESP32-C3 GPIO5"] --> R1["220-330 ohm resistor"]
-    R1 --> LED["Status LED"]
+    R1 --> LED["External Status LED"]
     LED --> GND
-    GPIO6["ESP32-C3 GPIO6"] --> Driver["Transistor or driver\nfor buzzer/vibration"]
-    Driver --> Output["Buzzer or vibration motor"]
-    Output --> Power["3V3 or external supply\nas required"]
-    Driver --> GND
+    GPIO6["ESP32-C3 GPIO6"] --> IN1["MX1508 IN1"]
+    GND --> IN2["MX1508 IN2 or logic GND\naccording to module wiring"]
+    VCC["3V3 or motor supply"] --> MX["MX1508 VM/VCC"]
+    MX --> Motor["3.3V vibration motor"]
+    Motor --> MX
+    MX --> GND
 ```
 
 ## 결선 표
@@ -67,9 +69,16 @@ flowchart LR
 | 기능 | ESP32-C3 Super Mini 핀 | 외부 부품 | 비고 |
 | --- | --- | --- | --- |
 | 호출 버튼 | `GPIO4` | 순간 누름 버튼 | 버튼의 다른 쪽은 `GND`, 펌웨어에서 내부 pull-up 사용 |
-| 상태 LED | `GPIO5` | LED + 220-330 ohm 저항 | 호출 중, 전송 실패, 확인 완료 상태 표시 후보 |
-| 진동 | `GPIO6` | 진동 모터 + 드라이버 | GPIO에 모터를 직접 연결하지 말고 트랜지스터/드라이버 사용 |
+| 상태 LED | `GPIO5` | 외부 LED + 220-330 ohm 저항 | 호출 중, 전송 실패, 확인 완료 상태 표시 후보 |
+| 진동 | `GPIO6` | 3.3V 소형 진동 모터 + MX1508 모터 드라이버 | GPIO에 모터를 직접 연결하지 않습니다. 실제 MX1508 모듈 핀명을 확인한 뒤 배선합니다. |
 | 전원 | `3V3`, `GND` | 보드 전원 | USB 전원 또는 안정적인 3.3V 전원 사용 |
+
+## 1차 펌웨어 목표
+
+- ESP-IDF + esp-matter 프로젝트를 구성합니다.
+- Google Home에서 Matter On/Off Switch로 표시되도록 합니다.
+- 이 단계에서는 버튼 입력, LED, 진동 모터 제어를 최소화하거나 더미 처리할 수 있습니다.
+- Google Home에 정상적으로 페어링되고 스위치 상태가 보이는 것을 1차 완료 기준으로 둡니다.
 
 ## 버튼 입력 기준
 
@@ -91,6 +100,7 @@ ESP-IDF 프로젝트가 추가되면 이 섹션에 포트 확인과 `idf.py flas
 
 ## 검증 체크리스트
 
+- Google Home에서 기기가 Matter On/Off Switch로 표시되는지 확인합니다.
 - 버튼 1회 입력이 호출 상태 1회로 처리되는지 확인합니다.
 - 연속 입력이나 손 떨림 입력이 과도한 중복 호출을 만들지 않는지 확인합니다.
 - Matter 페어링 후 전원 재시작 시 다시 연결되는지 확인합니다.

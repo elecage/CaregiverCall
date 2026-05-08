@@ -23,7 +23,7 @@
 - Google Nest Mini를 기본 시험용 Matter Hub로 사용합니다.
 - Google Nest Mini는 보호자 확인 사실을 사용자에게 알려주는 음성 피드백 장치로도 사용합니다.
 - 초기 펌웨어는 ESP-IDF + esp-matter로 구현합니다.
-- 초기 Matter 표현은 Google Home에서 버튼 또는 스위치처럼 보이게 하는 방향으로 검증합니다.
+- 1차 개발 목표는 Google Home에서 Matter On/Off Switch로 표시되는 것입니다.
 - 구현은 Google 전용 API나 특정 허브의 비표준 동작에 의존하지 않습니다.
 - 가능한 한 Matter 표준 클러스터, 표준 속성, 표준 커미셔닝 흐름을 우선합니다.
 - 다른 Matter Hub(예: Apple Home, Samsung SmartThings, Home Assistant 등)에서도 동작할 수 있도록 허브 종속 가정은 문서화합니다.
