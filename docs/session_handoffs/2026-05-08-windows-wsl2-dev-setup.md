@@ -8,7 +8,7 @@
 
 - 개발 호스트: Windows + WSL2 Ubuntu
 - ESP-IDF 버전: `v5.4.1`
-- esp-matter 버전: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter^1.4.2`
+- esp-matter 버전: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2`
 - 기본 업로드 포트: Windows 기준 `COM10`
 - USB 장치를 WSL2에 직접 연결해야 하면 `usbipd-win`을 사용합니다.
 

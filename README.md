@@ -23,6 +23,16 @@ ESP32-C3 Super Mini 보드와 Matter를 이용한 보호자 호출 보조기기 
 - [셋업 매뉴얼](docs/setup_manual.md)
 - [사용 매뉴얼](docs/user_manual.md)
 
+## 펌웨어
+
+1차 펌웨어 프로젝트는 [src/firmware](src/firmware)에 있습니다.
+
+```sh
+cd src/firmware
+idf.py set-target esp32c3
+idf.py build
+```
+
 ## Python 환경 설정
 
 Python 도구를 사용할 경우 저장소 로컬 가상환경인 `.venv` 안에서 실행합니다.

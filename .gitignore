@@ -5,3 +5,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .gitconfig-codex
+src/firmware/build/
+src/firmware/sdkconfig
+src/firmware/sdkconfig.old
+src/firmware/managed_components/

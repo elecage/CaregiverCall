@@ -75,6 +75,8 @@
 - Windows Python 환경 설정: `.\scripts\setup_python_env.ps1`
 - macOS/Linux Python 환경 설정: `./scripts/setup_python_env.sh`
 - Windows 개발 환경 점검: `.\scripts\check_windows_dev_env.ps1`
+- 펌웨어 빌드: `cd src/firmware && idf.py set-target esp32c3 && idf.py build`
+- Windows 펌웨어 업로드: `cd src/firmware; idf.py -p COM10 flash monitor`
 
 ## Git 주의사항
 

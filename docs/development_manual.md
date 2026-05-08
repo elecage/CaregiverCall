@@ -18,7 +18,7 @@
 고정 버전:
 
 - ESP-IDF: `v5.4.1`
-- esp-matter: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter^1.4.2`
+- esp-matter: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2`
 - 개발 호스트: Windows + WSL2 Ubuntu
 - 기본 업로드 포트: Windows 기준 `COM10`
 
@@ -135,7 +135,7 @@ source ./export.sh
 또는 ESP-IDF 프로젝트 안에서 컴포넌트 의존성으로 추가하는 방식:
 
 ```sh
-idf.py add-dependency "espressif/esp_matter^1.4.2"
+idf.py add-dependency "espressif/esp_matter==1.4.2"
 ```
 
 초기 펌웨어 프로젝트를 만들 때 두 방식 중 하나를 선택하고 이 문서를 갱신합니다.
@@ -244,11 +244,30 @@ flowchart LR
 
 ## 컴파일
 
-ESP-IDF 프로젝트가 추가되면 이 섹션에 `idf.py build` 기준 절차를 기록합니다.
+WSL2 Ubuntu에서 ESP-IDF 환경을 불러온 뒤 실행합니다.
+
+```sh
+source ~/esp/esp-idf/export.sh
+cd /mnt/c/Users/hmshim/.codex/worktrees/ef01/CaregiverCall/src/firmware
+idf.py set-target esp32c3
+idf.py build
+```
 
 ## 업로드
 
-ESP-IDF 프로젝트가 추가되면 이 섹션에 포트 확인과 `idf.py flash monitor` 기준 절차를 기록합니다.
+Windows ESP-IDF Shell에서 `COM10`으로 업로드하는 경우:
+
+```powershell
+cd C:\Users\hmshim\.codex\worktrees\ef01\CaregiverCall\src\firmware
+idf.py -p COM10 flash monitor
+```
+
+WSL2에서 `usbipd-win`으로 USB 장치를 attach한 경우:
+
+```sh
+cd /mnt/c/Users/hmshim/.codex/worktrees/ef01/CaregiverCall/src/firmware
+idf.py -p /dev/ttyACM0 flash monitor
+```
 
 ## 검증 체크리스트
 

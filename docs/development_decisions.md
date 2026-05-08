@@ -9,7 +9,7 @@
 | 펌웨어 스택 | ESP-IDF + esp-matter |
 | 개발 호스트 | Windows + WSL2 Ubuntu |
 | ESP-IDF 버전 | v5.4.1 |
-| esp-matter 버전 | release/v1.4.2 또는 ESP Component Registry `espressif/esp_matter^1.4.2` |
+| esp-matter 버전 | release/v1.4.2 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2` |
 | 기본 업로드 포트 | Windows 기준 `COM10` |
 | 1차 개발 목표 | Matter 스위치로 Google Home에 표시 |
 | 기본 Matter 표현 | On/Off Switch |
