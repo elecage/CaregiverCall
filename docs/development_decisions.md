@@ -35,6 +35,7 @@
 
 - 먼저 Matter 기기가 Google Home에서 On/Off Switch 형태로 인식되도록 최소 펌웨어를 구성합니다.
 - 1차 목표에서는 Google Home에 Matter 스위치로 표시되는 것까지만 검증합니다.
+- ESP-IDF 6.0 이상 버전이 존재하지만, esp-matter 1.4.2의 권장 조합을 우선해 ESP-IDF v5.4.1로 고정합니다.
 - 1차 펌웨어는 Windows native ESP-IDF에서 먼저 빌드/업로드를 시도할 수 있습니다.
 - esp-matter 전체 SDK, CHIP tool, host tools가 필요하면 WSL2 Ubuntu 안에서 ESP-IDF와 esp-matter를 사용합니다.
 - 보드 업로드는 Windows `COM10`을 기본 가정으로 시작하되, WSL2에서 직접 플래시해야 하면 `usbipd-win`으로 USB 장치를 연결합니다.

@@ -10,6 +10,7 @@
 - 보조 개발 호스트: esp-matter 전체 SDK/host tools가 필요하면 WSL2 Ubuntu
 - ESP-IDF 버전: `v5.4.1`
 - esp-matter 버전: `release/v1.4.2` 또는 ESP Component Registry `espressif/esp_matter` version `1.4.2`
+- ESP-IDF 6.0 이상도 존재하지만, esp-matter 1.4.2 권장 조합을 우선해 v5.4.1을 사용합니다.
 - 기본 업로드 포트: Windows 기준 `COM10`
 - USB 장치를 WSL2에 직접 연결해야 하면 `usbipd-win`을 사용합니다.
 

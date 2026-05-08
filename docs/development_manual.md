@@ -22,6 +22,8 @@
 - 개발 호스트: Windows native ESP-IDF 우선 시도, esp-matter 전체 SDK/host tools가 필요하면 WSL2 Ubuntu
 - 기본 업로드 포트: Windows 기준 `COM10`
 
+ESP-IDF 6.0 이상도 사용할 수 있지만, 현재 1차 펌웨어는 esp-matter 1.4.2의 권장 조합을 우선해 ESP-IDF `v5.4.1`로 고정합니다. ESP-IDF 6.x로 올리는 작업은 esp-matter 호환성 확인 후 별도 변경으로 진행합니다.
+
 Python 도구가 필요한 경우 저장소 로컬 `.venv`를 사용합니다.
 
 Windows PowerShell:
@@ -60,7 +62,7 @@ PowerShell에서 EIM CLI를 설치할 수 있습니다.
 winget install Espressif.EIM-CLI
 ```
 
-ESP-IDF v5.4.1을 설치합니다.
+ESP-IDF v5.4.1을 설치합니다. 최신 6.x가 아니라 이 버전을 선택하는 이유는 esp-matter 1.4.2와의 호환성을 우선하기 때문입니다.
 
 ```powershell
 eim install -i v5.4.1
