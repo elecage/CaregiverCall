@@ -46,8 +46,9 @@ ESP32-C3 Super Mini 보드는 제조사와 판매처에 따라 핀 배치 표기
 
 - 호출 버튼: `GPIO4`
 - 외부 상태 LED: `GPIO5`
-- MX1508 진동 모터 드라이버 제어 신호: `GPIO6`
+- MX1508 진동 모터 드라이버 제어 신호: `GPIO6`, `GPIO7`
 - 전원: `3V3`, `GND`
+- MX1508 모듈 참조 이미지: https://ae01.alicdn.com/kf/Scd3bb02492b64cd89a5f1e06951d5baaK.jpg
 
 ```mermaid
 flowchart LR
@@ -57,11 +58,11 @@ flowchart LR
     R1 --> LED["External Status LED"]
     LED --> GND
     GPIO6["ESP32-C3 GPIO6"] --> IN1["MX1508 IN1"]
-    GND --> IN2["MX1508 IN2 or logic GND\naccording to module wiring"]
-    VCC["3V3 or motor supply"] --> MX["MX1508 VM/VCC"]
-    MX --> Motor["3.3V vibration motor"]
-    Motor --> MX
-    MX --> GND
+    GPIO7["ESP32-C3 GPIO7"] --> IN2["MX1508 IN2"]
+    VCC["3V3 motor supply"] --> PWR["MX1508 + / VCC"]
+    GND --> MGND["MX1508 - / GND"]
+    OUT1["MX1508 OUT1"] --> Motor["3.3V vibration motor"]
+    Motor --> OUT2["MX1508 OUT2"]
 ```
 
 ## 결선 표
@@ -70,8 +71,24 @@ flowchart LR
 | --- | --- | --- | --- |
 | 호출 버튼 | `GPIO4` | 순간 누름 버튼 | 버튼의 다른 쪽은 `GND`, 펌웨어에서 내부 pull-up 사용 |
 | 상태 LED | `GPIO5` | 외부 LED + 220-330 ohm 저항 | 호출 중, 전송 실패, 확인 완료 상태 표시 후보 |
-| 진동 | `GPIO6` | 3.3V 소형 진동 모터 + MX1508 모터 드라이버 | GPIO에 모터를 직접 연결하지 않습니다. 실제 MX1508 모듈 핀명을 확인한 뒤 배선합니다. |
+| 진동 IN1 | `GPIO6` | MX1508 `IN1` | 진동 모터 채널 A 제어 |
+| 진동 IN2 | `GPIO7` | MX1508 `IN2` | 진동 모터 채널 A 제어 |
+| 진동 출력 | MX1508 `OUT1`, `OUT2` | 3.3V 소형 진동 모터 | GPIO에 모터를 직접 연결하지 않습니다. |
+| 모터 드라이버 전원 | `3V3`, `GND` | MX1508 `+`/`VCC`, `-`/`GND` | ESP32-C3와 MX1508의 GND는 반드시 공통으로 연결합니다. |
 | 전원 | `3V3`, `GND` | 보드 전원 | USB 전원 또는 안정적인 3.3V 전원 사용 |
+
+## MX1508 진동 모터 제어 기준
+
+3.3V 소형 진동 모터는 MX1508의 한 채널만 사용합니다. 기본 채널은 `IN1/IN2`와 `OUT1/OUT2`입니다.
+
+| `IN1` | `IN2` | 동작 |
+| --- | --- | --- |
+| LOW | LOW | 정지 |
+| HIGH 또는 PWM | LOW | 진동 |
+| LOW | HIGH 또는 PWM | 반대 방향 진동 |
+| HIGH | HIGH | 브레이크 |
+
+진동 모터는 방향이 중요하지 않으므로 기본 구현에서는 `IN1`을 구동하고 `IN2`는 LOW로 둡니다. 빠른 정지가 필요하면 `IN1`과 `IN2`를 모두 HIGH로 두는 브레이크 동작을 실험할 수 있습니다.
 
 ## 1차 펌웨어 목표
 
