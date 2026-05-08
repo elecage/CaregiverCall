@@ -8,6 +8,20 @@ ESP32-C3 Super Mini 보드와 Matter를 이용한 보호자 호출 보조기기 
 
 자세한 요구사항은 [docs/product_requirements.md](docs/product_requirements.md)를 참고하세요.
 
+## 저장소 구조
+
+- `src/`: 펌웨어 소스 코드
+- `lib/`: 프로젝트 내부 라이브러리 또는 외부 라이브러리 래퍼
+- `docs/`: 제품 요구사항과 매뉴얼
+- `scripts/`: 개발 환경 설정과 자동화 스크립트
+
+## 문서
+
+- [제품 요구사항](docs/product_requirements.md)
+- [개발 매뉴얼](docs/development_manual.md)
+- [셋업 매뉴얼](docs/setup_manual.md)
+- [사용 매뉴얼](docs/user_manual.md)
+
 ## Python 환경 설정
 
 Python 도구를 사용할 경우 저장소 로컬 가상환경인 `.venv` 안에서 실행합니다.

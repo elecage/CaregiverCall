@@ -1,0 +1,92 @@
+# Development Manual
+
+이 문서는 CaregiverCall 개발 환경 설정, 컴파일, 업로드, 초기 하드웨어 결선 기준을 설명합니다.
+
+## 디렉터리 구조
+
+- `src/`: ESP32-C3 Super Mini 펌웨어 소스 코드
+- `lib/`: 프로젝트 내부 라이브러리 또는 외부 라이브러리 래퍼
+- `docs/`: 제품 요구사항, 개발 매뉴얼, 셋업 매뉴얼, 사용 매뉴얼
+- `scripts/`: 개발 환경 설정과 자동화 스크립트
+
+## 개발 환경 설정
+
+아직 펌웨어 스택은 확정되지 않았습니다. ESP32 Matter 개발에는 ESP-IDF 기반 구성이 우선 후보입니다.
+
+Python 도구가 필요한 경우 저장소 로컬 `.venv`를 사용합니다.
+
+Windows PowerShell:
+
+```powershell
+.\scripts\setup_python_env.ps1
+```
+
+macOS/Linux:
+
+```sh
+./scripts/setup_python_env.sh
+```
+
+Python 의존성은 `requirements.txt`에 기록합니다.
+
+## 개발보드
+
+- 보드: ESP32-C3 Super Mini
+- 연결: USB-C 또는 보드에 맞는 USB 케이블
+- 주요 기능: Matter over Wi-Fi, 물리 호출 버튼 입력, 사용자 피드백 출력
+
+ESP32-C3 Super Mini 보드는 제조사와 판매처에 따라 핀 배치 표기가 다를 수 있습니다. 아래 결선은 초기 개발 기준안이며, 실제 연결 전 보드 실크스크린과 핀맵을 확인하세요.
+
+## 초기 결선도
+
+초기 펌웨어 기준 핀 제안:
+
+- 호출 버튼: `GPIO4`
+- 상태 LED: `GPIO5`
+- 선택 부저 또는 진동 모터 제어 신호: `GPIO6`
+- 전원: `3V3`, `GND`
+
+```mermaid
+flowchart LR
+    Button["Call Button"] -->|"one side"| GND["ESP32-C3 GND"]
+    Button -->|"other side"| GPIO4["ESP32-C3 GPIO4\ninput pull-up"]
+    GPIO5["ESP32-C3 GPIO5"] --> R1["220-330 ohm resistor"]
+    R1 --> LED["Status LED"]
+    LED --> GND
+    GPIO6["ESP32-C3 GPIO6"] --> Driver["Transistor or driver\nfor buzzer/vibration"]
+    Driver --> Output["Buzzer or vibration motor"]
+    Output --> Power["3V3 or external supply\nas required"]
+    Driver --> GND
+```
+
+## 결선 표
+
+| 기능 | ESP32-C3 Super Mini 핀 | 외부 부품 | 비고 |
+| --- | --- | --- | --- |
+| 호출 버튼 | `GPIO4` | 순간 누름 버튼 | 버튼의 다른 쪽은 `GND`, 펌웨어에서 내부 pull-up 사용 |
+| 상태 LED | `GPIO5` | LED + 220-330 ohm 저항 | 호출 중, 전송 실패, 확인 완료 상태 표시 후보 |
+| 부저/진동 | `GPIO6` | 부저 또는 진동 모터 + 드라이버 | GPIO에 모터를 직접 연결하지 말고 트랜지스터/드라이버 사용 |
+| 전원 | `3V3`, `GND` | 보드 전원 | USB 전원 또는 안정적인 3.3V 전원 사용 |
+
+## 버튼 입력 기준
+
+- 기본 상태: 내부 pull-up으로 `HIGH`
+- 버튼 누름: `LOW`
+- 디바운스: 최소 30-80 ms 후보
+- 긴 누름, 중복 입력, 손 떨림 입력을 고려해 상태 머신으로 처리합니다.
+
+## 컴파일
+
+아직 컴파일 명령은 확정되지 않았습니다. ESP-IDF가 도입되면 이 섹션에 `idf.py build` 기준 절차를 기록합니다.
+
+## 업로드
+
+아직 업로드 명령은 확정되지 않았습니다. ESP-IDF가 도입되면 이 섹션에 포트 확인과 `idf.py flash monitor` 기준 절차를 기록합니다.
+
+## 검증 체크리스트
+
+- 버튼 1회 입력이 호출 상태 1회로 처리되는지 확인합니다.
+- 연속 입력이나 손 떨림 입력이 과도한 중복 호출을 만들지 않는지 확인합니다.
+- Matter 페어링 후 전원 재시작 시 다시 연결되는지 확인합니다.
+- 보호자 확인 후 Nest Mini 음성 안내와 로컬 피드백이 동작하는지 확인합니다.
+
