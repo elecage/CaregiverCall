@@ -2,6 +2,7 @@
 
 #include <esp_err.h>
 #include <esp_log.h>
+#include <esp_wifi.h>
 #include <nvs_flash.h>
 
 #include <app/server/CommissioningWindowManager.h>
@@ -20,12 +21,31 @@ using namespace esp_matter::endpoint;
 
 static const char *TAG = "caregiver_call";
 static constexpr auto k_commissioning_window_timeout_seconds = 300;
+static constexpr int8_t k_wifi_max_tx_power_quarter_dbm = 34; // 8.5 dBm
 
 uint16_t caregiver_endpoint_id = 0;
+
+static void apply_wifi_tx_power_limit()
+{
+    esp_err_t err = esp_wifi_set_max_tx_power(k_wifi_max_tx_power_quarter_dbm);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG, "Wi-Fi max TX power limited to %d.%02d dBm",
+                 k_wifi_max_tx_power_quarter_dbm / 4,
+                 (k_wifi_max_tx_power_quarter_dbm % 4) * 25);
+        return;
+    }
+
+    ESP_LOGW(TAG, "Failed to limit Wi-Fi max TX power: %s", esp_err_to_name(err));
+}
 
 static void app_event_cb(const chip::DeviceLayer::ChipDeviceEvent *event, intptr_t arg)
 {
     switch (event->Type) {
+    case chip::DeviceLayer::DeviceEventType::kWiFiConnectivityChange:
+        if (event->WiFiConnectivityChange.Result == chip::DeviceLayer::kConnectivity_Established) {
+            apply_wifi_tx_power_limit();
+        }
+        break;
     case chip::DeviceLayer::DeviceEventType::kCommissioningComplete:
         ESP_LOGI(TAG, "Matter commissioning complete");
         break;
@@ -116,6 +136,7 @@ extern "C" void app_main()
 
     err = esp_matter::start(app_event_cb);
     ESP_ERROR_CHECK(err);
+    apply_wifi_tx_power_limit();
 
     ESP_ERROR_CHECK(app_driver_set_defaults(caregiver_endpoint_id));
 

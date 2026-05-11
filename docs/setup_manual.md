@@ -18,15 +18,53 @@
 - CaregiverCall 펌웨어가 Matter 커미셔닝 모드를 지원해야 합니다.
 - 보호자 알림과 확인 흐름은 Google Home 자동화 또는 별도 연동 방식으로 구성해야 합니다.
 
+## 현재 펌웨어 기본 페어링 코드
+
+현재 개발용 펌웨어는 Matter 테스트용 기본 커미셔닝 값을 사용합니다.
+
+| 항목 | 값 |
+| --- | --- |
+| Setup PIN / Passcode | `20202021` |
+| Manual pairing code | `34970112332` |
+| Discriminator | `3840` |
+
+Google Home 앱에서 8자리 코드를 묻는 화면이면 `20202021`을 입력합니다. "Matter setup code" 또는 "manual code"처럼 11자리 코드를 묻는 화면이면 `34970112332`를 입력합니다.
+
+이 값은 개발과 초기 시험용 기본값입니다. 실제 배포용 기기에서는 기기별 고유 커미셔닝 코드와 제조 데이터를 사용해야 합니다.
+
 ## Google Home에 기기 연결하기
 
 1. CaregiverCall 기기에 전원을 연결합니다.
-2. 기기가 커미셔닝 모드인지 확인합니다.
+2. 기기가 커미셔닝 모드인지 확인합니다. 초기 등록 시에는 BLE 커미셔닝이 켜져 있어야 하며, 시리얼 로그에서 `CHIPoBLE advertising` 또는 `NimBLE: GAP procedure initiated: advertise`가 보이면 Google Home 앱이 액세서리를 찾을 수 있는 상태입니다.
 3. Google Home 앱을 엽니다.
 4. 기기 추가 메뉴에서 Matter 기기 추가를 선택합니다.
 5. 기기의 QR 코드 또는 페어링 코드를 입력합니다.
 6. Google Home 앱 안내에 따라 방과 이름을 지정합니다.
 7. 페어링 완료 후 기기의 호출 상태가 Google Home에서 인식되는지 확인합니다.
+
+## 연결 확인
+
+시리얼 로그에서 다음 상태가 보이면 Matter 연결이 살아 있는 상태입니다.
+
+```text
+Msg TX ... Type 0001:05 (IM:ReportData)
+Received status response, status is 0x00
+```
+
+허브에서 명령을 보낼 때는 다음과 같은 로그가 보입니다.
+
+```text
+Received command ... endpoint 0x0001's cluster 0x00000006
+InvokeCommandResponse
+```
+
+버튼을 누르면 현재 펌웨어는 On/Off 상태를 토글하고 Google Home으로 리포트합니다.
+
+```text
+Call button pressed: OnOff updated to true
+Msg TX ... Type 0001:05 (IM:ReportData)
+Received status response, status is 0x00
+```
 
 ## 보호자 알림 구성
 
@@ -63,7 +101,10 @@
 | 문제 | 확인할 것 |
 | --- | --- |
 | Matter 기기가 검색되지 않음 | 기기가 커미셔닝 모드인지, 전원이 안정적인지, QR/페어링 코드가 맞는지 확인 |
+| 액세서리를 추가할 수 없음 | BLE 커미셔닝이 켜져 있는지 확인. 로그에서 `CHIPoBLE advertising` 또는 `NimBLE ... advertise`가 보여야 함 |
+| 보드가 앱으로 부팅되지 않음 | 시리얼 로그에 `DOWNLOAD(USB/UART0/1)`와 `waiting for download`가 보이면 BOOT 버튼 또는 GPIO9가 GND로 잡혀 있는지 확인 |
 | Google Home에 추가되지만 자동화가 동작하지 않음 | 자동화 트리거가 기기의 실제 상태 변경과 일치하는지 확인 |
+| 버튼을 눌러도 상태가 바뀌지 않음 | 버튼이 `GPIO4`와 `GND` 사이에 연결되어 있는지 확인. 정상 입력 시 `Call button pressed` 로그가 보여야 함 |
 | 보호자 알림이 오지 않음 | 스마트폰 알림 권한, Google Home 집 구성원, 네트워크 상태 확인 |
 | Nest Mini가 말하지 않음 | Nest Mini 전원, 볼륨, 방해 금지, Downtime, 네트워크 상태 확인 |
 | 호출이 반복됨 | 버튼 디바운스, 긴 누름 처리, 호출 재시도 정책 확인 |

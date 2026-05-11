@@ -6,7 +6,7 @@ idf_component_register(
         "."
     REQUIRES
         driver
+        esp_wifi
         esp_matter
         nvs_flash
 )
-

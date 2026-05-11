@@ -5,6 +5,8 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .gitconfig-codex
+.tools/
+eim_config.toml
 src/firmware/build/
 src/firmware/sdkconfig
 src/firmware/sdkconfig.old

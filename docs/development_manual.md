@@ -83,7 +83,7 @@ idf.py --version
 펌웨어 빌드:
 
 ```powershell
-cd C:\Users\hmshim\.codex\worktrees\ef01\CaregiverCall\src\firmware
+cd src\firmware
 idf.py set-target esp32c3
 idf.py build
 ```
@@ -293,10 +293,18 @@ flowchart LR
 - 기본 상태: 내부 pull-up으로 `HIGH`
 - 버튼 누름: `LOW`
 - 큰 버튼 1회 입력으로 호출합니다.
-- 디바운스: 최소 30-80 ms 후보
-- 한 번 호출한 뒤 짧은 시간 동안 재입력을 무시해 중복 호출을 방지합니다.
+- 현재 펌웨어는 `GPIO4`를 20 ms 주기로 폴링하고, 80 ms 디바운스 후 On/Off 상태를 토글합니다.
+- 버튼 입력이 확정되면 Matter On/Off 속성이 갱신되고 Google Home으로 `ReportData`가 전송됩니다.
 - 긴 누름, 중복 입력, 손 떨림 입력을 고려해 상태 머신으로 처리합니다.
 - 재부팅하면 이전 호출 상태를 복원하지 않고 대기 상태로 초기화합니다.
+
+정상 버튼 입력 로그 예시는 다음과 같습니다.
+
+```text
+Call button pressed: OnOff updated to true
+Msg TX ... Type 0001:05 (IM:ReportData)
+Received status response, status is 0x00
+```
 
 ## 컴파일
 
@@ -304,7 +312,7 @@ WSL2 Ubuntu에서 ESP-IDF 환경을 불러온 뒤 실행합니다.
 
 ```sh
 source ~/esp/esp-idf/export.sh
-cd /mnt/c/Users/hmshim/.codex/worktrees/ef01/CaregiverCall/src/firmware
+cd src/firmware
 idf.py set-target esp32c3
 idf.py build
 ```
@@ -314,21 +322,44 @@ idf.py build
 Windows ESP-IDF Shell에서 `COM10`으로 업로드하는 경우:
 
 ```powershell
-cd C:\Users\hmshim\.codex\worktrees\ef01\CaregiverCall\src\firmware
+cd src\firmware
 idf.py -p COM10 flash monitor
+```
+
+현재 Windows 시험 보드는 `COM3` 또는 `COM10`으로 잡힐 수 있습니다. `idf.py flash`에서 포트 점유 문제가 나면 빌드 디렉터리에서 `esptool`로 직접 플래시할 수 있습니다.
+
+```powershell
+cd src\firmware\build
+python -m esptool --chip esp32c3 -p COM3 -b 460800 --before default_reset --after hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 4MB 0x0 bootloader\bootloader.bin 0x20000 caregiver_call.bin 0x8000 partition_table\partition-table.bin 0xf000 ota_data_initial.bin
 ```
 
 WSL2에서 `usbipd-win`으로 USB 장치를 attach한 경우:
 
 ```sh
-cd /mnt/c/Users/hmshim/.codex/worktrees/ef01/CaregiverCall/src/firmware
+cd src/firmware
 idf.py -p /dev/ttyACM0 flash monitor
 ```
+
+## ESP32-C3 Super Mini Wi-Fi 안정화
+
+ESP32-C3 Super Mini 보드는 USB 전원, 온보드 레귤레이터, 안테나 환경에 따라 Wi-Fi 송신 전력이 높을 때 공유기 연결이 불안정할 수 있습니다.
+
+현재 펌웨어는 PHY 초기 설정에서 Wi-Fi 최대 송신 전력을 ESP-IDF 허용 최소값인 `10 dBm`으로 낮추고, Matter 시작 후 런타임에서도 `8.5 dBm`으로 제한합니다. 런타임 적용 로그는 시리얼 모니터에서 다음과 같이 확인할 수 있습니다.
+
+```text
+Wi-Fi max TX power limited to 8.50 dBm
+```
+
+연결 안정성이 좋아지지 않으면 전원 품질, 안테나 위치, 2.4 GHz Wi-Fi 채널, 공유기와의 거리도 함께 확인합니다.
+
+초기 Google Home 등록은 BLE를 통해 Wi-Fi 정보를 전달받습니다. 따라서 펌웨어는 NimBLE 기반 CHIPoBLE 커미셔닝을 활성화합니다. 부팅 로그에서 BLE advertising 또는 CHIPoBLE 관련 로그가 보이면 Google Home 앱에서 액세서리를 찾을 수 있는 상태입니다.
 
 ## 검증 체크리스트
 
 - Google Home에서 기기가 Matter On/Off Switch로 표시되는지 확인합니다.
 - 버튼 1회 입력이 호출 상태 1회로 처리되는지 확인합니다.
+- 버튼 입력 시 `Call button pressed` 로그가 출력되는지 확인합니다.
+- 버튼 입력 후 Matter `ReportData`와 `StatusResponse 0x00` 로그가 이어지는지 확인합니다.
 - 연속 입력이나 손 떨림 입력이 과도한 중복 호출을 만들지 않는지 확인합니다.
 - Matter 페어링 후 전원 재시작 시 다시 연결되는지 확인합니다.
 - 보호자 확인 후 Nest Mini 음성 안내와 로컬 피드백이 동작하는지 확인합니다.
