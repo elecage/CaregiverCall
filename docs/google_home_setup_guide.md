@@ -26,7 +26,7 @@
 
 ![Google Home add menu](assets/google_home_setup/02-add-menu.jpg)
 
-3. `Google Home에 기기 추가` 화면에서 `기기 검색`을 선택합니다. Google Home이 주변의 Matter 기기를 검색한 뒤, 선택한 기기에 대해 페어링 코드를 입력하는 흐름으로 이어집니다.
+3. `Google Home에 기기 추가` 화면에서 두 번째 항목인 `기기 검색`을 선택합니다. Google Home이 주변의 Matter 기기를 검색한 뒤, 선택한 기기에 대해 페어링 코드를 입력하는 흐름으로 이어집니다.
 
 ![Google Home add device](assets/google_home_setup/03-add-device.jpg)
 
@@ -46,7 +46,7 @@
 
 ![Google account consent](assets/google_home_setup/07-google-consent.jpg)
 
-8. 기기를 찾을 수 없다는 화면이 나오면 전원, Bluetooth, 페어링 코드, 기기 초기화 상태를 확인한 뒤 다시 시도합니다.
+8. 기기를 찾을 수 없다는 화면이 나오면 성공 흐름이 아니므로, 전원, Bluetooth, 페어링 코드, 기기 초기화 상태를 확인한 뒤 다시 시도합니다. 정상적으로 기기가 검색되었다면 이 화면은 건너뛰고 다음 단계로 진행합니다.
 
 ![Device not found help](assets/google_home_setup/08-device-not-found-help.jpg)
 
@@ -54,7 +54,7 @@
 
 ![Matter code entry](assets/google_home_setup/09-matter-code.jpg)
 
-10. iPhone에서 iOS Home 접근 권한 또는 액세서리 추가 확인창이 나오면 허용합니다.
+10. iPhone에서 iOS 및 Google Home에 기기를 추가하는 진행 화면이 표시됩니다. 중간에 액세서리 추가 확인창이 나오면 허용합니다.
 
 ![iOS Home prompt](assets/google_home_setup/10-ios-home-prompt.jpg)
 
@@ -96,31 +96,31 @@
 
 보호자 알림, 음성 안내, 다른 기기 제어가 필요하면 Google Home의 자동화 기능을 사용합니다.
 
-1. Google Home 앱의 추가 메뉴에서 `자동화` 또는 `자동화 추가`로 들어갑니다.
+1. 자동화 편집 화면에서 시작 조건을 추가할 때 `기기`를 선택합니다. 이 캡처는 CaregiverCall 버튼 상태를 자동화 시작 조건으로 쓰기 위한 선택 화면입니다.
 
 ![Automation menu](assets/google_home_setup/18-automation-menu.jpg)
 
-2. 새 자동화를 추가합니다.
+2. 시작 조건 수정 화면에서 CaregiverCall 기기인 `보호자호출기`를 선택하고, 플러그 상태 항목인 `켜짐 또는 꺼짐`을 선택합니다.
 
 ![Add automation](assets/google_home_setup/19-add-automation.jpg)
 
-3. 자동화 이름을 입력합니다. 예: `보호자 호출 알림`.
+3. 상태 선택 창에서 `켜짐`을 선택합니다. 현재 펌웨어는 버튼을 누르면 Google Home의 On/Off 상태를 토글하므로, 호출 이벤트는 `켜짐` 상태로 해석합니다.
 
 ![Automation name](assets/google_home_setup/20-automation-name.jpg)
 
-4. 시작 조건에서 CaregiverCall 기기의 상태 변화를 선택합니다.
+4. 자동화 편집 화면으로 돌아오면 시작 조건에 `보호자호출기 · 켜짐`이 추가되어 있는지 확인합니다. 이어서 작업 영역의 `+` 버튼을 눌러 실행할 작업을 추가합니다.
 
 ![Automation starters](assets/google_home_setup/21-automation-starters.jpg)
 
-5. 작업 추가 화면에서 알림, 음성 안내, 기기 제어 등 필요한 작업을 선택합니다.
+5. 작업 추가 화면에서 보호자에게 알려줄 방식에 맞는 작업을 선택합니다. 캡처 흐름에서는 Google Home 스피커로 안내하기 위해 `방송`을 선택합니다.
 
 ![Automation actions](assets/google_home_setup/22-automation-actions.jpg)
 
-6. 기기 상태 조건을 사용할 경우 CaregiverCall이 `켜짐` 상태가 되었을 때 실행되도록 설정합니다.
+6. 방송 작업을 선택한 경우 안내 문구와 방송할 기기 또는 방을 설정합니다. 예: `보호자에게 연락하였습니다. 잠시만 기다려주세요.`
 
 ![Device state action](assets/google_home_setup/23-device-state-action.jpg)
 
-7. 자동화 저장 후 버튼을 눌러 실제 알림 또는 음성 안내가 실행되는지 확인합니다.
+7. 자동화 편집 화면에서 시작 조건과 작업이 모두 들어간 것을 확인한 뒤 저장합니다. 이후 CaregiverCall 버튼을 눌러 방송 또는 알림이 실제로 실행되는지 확인합니다.
 
 ![Automation done](assets/google_home_setup/24-automation-done.jpg)
 
