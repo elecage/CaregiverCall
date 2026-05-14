@@ -1,5 +1,7 @@
 # Setup Manual
 
+Google Home 앱 화면 캡처를 포함한 상세 절차는 [Google Home 설정 가이드](google_home_setup_guide.md)를 참고합니다.
+
 이 문서는 CaregiverCall 기기를 Google Home에 연결하고 Google Nest Mini를 이용해 시험하는 절차를 설명합니다.
 
 ## 준비물
