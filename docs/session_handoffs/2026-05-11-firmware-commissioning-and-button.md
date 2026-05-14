@@ -51,6 +51,6 @@ Call button pressed: OnOff updated to false
 
 ## Notes
 
-- 개발용 Matter 기본 코드는 `20202021`, manual pairing code는 `34970112332`, discriminator는 `3840`입니다.
+- 개발용 Matter 코드는 도어락 등 생활 PIN과 겹치지 않도록 `73948261`로 변경했습니다. manual pairing code는 `35642145134`, discriminator는 `3840`입니다.
 - 보드가 `DOWNLOAD(USB/UART0/1)`와 `waiting for download` 상태로 부팅하면 앱이 실행되지 않습니다. BOOT 버튼 또는 GPIO9가 GND로 잡혀 있는지 확인해야 합니다.
 - 짧은 시간에 버튼을 반복 입력하면 Matter 세션 재전송 로그가 늘어날 수 있습니다. 실제 호출 UX에서는 긴 누름/재입력 잠금 정책을 추가하는 것이 좋습니다.

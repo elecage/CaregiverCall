@@ -24,11 +24,11 @@
 
 | 항목 | 값 |
 | --- | --- |
-| Setup PIN / Passcode | `20202021` |
-| Manual pairing code | `34970112332` |
+| Setup PIN / Passcode | `73948261` |
+| Manual pairing code | `35642145134` |
 | Discriminator | `3840` |
 
-Google Home 앱에서 8자리 코드를 묻는 화면이면 `20202021`을 입력합니다. "Matter setup code" 또는 "manual code"처럼 11자리 코드를 묻는 화면이면 `34970112332`를 입력합니다.
+Google Home 앱에서 8자리 코드를 묻는 화면이면 `73948261`을 입력합니다. "Matter setup code" 또는 "manual code"처럼 11자리 코드를 묻는 화면이면 `35642145134`를 입력합니다.
 
 이 값은 개발과 초기 시험용 기본값입니다. 실제 배포용 기기에서는 기기별 고유 커미셔닝 코드와 제조 데이터를 사용해야 합니다.
 

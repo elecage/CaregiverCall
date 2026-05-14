@@ -1,5 +1,7 @@
 #include "app_priv.h"
 
+#include <cstring>
+
 #include <esp_err.h>
 #include <esp_log.h>
 #include <esp_wifi.h>
@@ -13,7 +15,10 @@
 #include <esp_matter_console.h>
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
+#include <esp_matter_providers.h>
+#include <crypto/CHIPCryptoPAL.h>
 #include <platform/CHIPDeviceEvent.h>
+#include <platform/CommissionableDataProvider.h>
 
 using namespace chip::app::Clusters;
 using namespace esp_matter;
@@ -22,8 +27,81 @@ using namespace esp_matter::endpoint;
 static const char *TAG = "caregiver_call";
 static constexpr auto k_commissioning_window_timeout_seconds = 300;
 static constexpr int8_t k_wifi_max_tx_power_quarter_dbm = 34; // 8.5 dBm
+static constexpr uint32_t k_setup_passcode = 73948261;
+static constexpr uint16_t k_setup_discriminator = 3840;
+static constexpr uint32_t k_spake2p_iteration_count = 1000;
+static constexpr uint8_t k_spake2p_salt[] = {
+    0x53, 0x50, 0x41, 0x4b, 0x45, 0x32, 0x50, 0x20,
+    0x4b, 0x65, 0x79, 0x20, 0x53, 0x61, 0x6c, 0x74,
+};
 
 uint16_t caregiver_endpoint_id = 0;
+
+class CaregiverCommissionableDataProvider : public chip::DeviceLayer::CommissionableDataProvider {
+public:
+    CHIP_ERROR GetSetupDiscriminator(uint16_t &setup_discriminator) override
+    {
+        setup_discriminator = k_setup_discriminator;
+        return CHIP_NO_ERROR;
+    }
+
+    CHIP_ERROR SetSetupDiscriminator(uint16_t setup_discriminator) override
+    {
+        (void) setup_discriminator;
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+
+    CHIP_ERROR GetSpake2pIterationCount(uint32_t &iteration_count) override
+    {
+        iteration_count = k_spake2p_iteration_count;
+        return CHIP_NO_ERROR;
+    }
+
+    CHIP_ERROR GetSpake2pSalt(chip::MutableByteSpan &salt_buf) override
+    {
+        if (salt_buf.size() < sizeof(k_spake2p_salt)) {
+            return CHIP_ERROR_BUFFER_TOO_SMALL;
+        }
+
+        std::memcpy(salt_buf.data(), k_spake2p_salt, sizeof(k_spake2p_salt));
+        salt_buf.reduce_size(sizeof(k_spake2p_salt));
+        return CHIP_NO_ERROR;
+    }
+
+    CHIP_ERROR GetSpake2pVerifier(chip::MutableByteSpan &verifier_buf, size_t &out_verifier_len) override
+    {
+        chip::Crypto::Spake2pVerifier verifier;
+        chip::Crypto::Spake2pVerifierSerialized serialized_verifier = {};
+        chip::MutableByteSpan serialized_span(serialized_verifier);
+        chip::ByteSpan salt_span(k_spake2p_salt);
+
+        out_verifier_len = sizeof(serialized_verifier);
+        if (verifier_buf.size() < out_verifier_len) {
+            return CHIP_ERROR_BUFFER_TOO_SMALL;
+        }
+
+        ReturnErrorOnFailure(verifier.Generate(k_spake2p_iteration_count, salt_span, k_setup_passcode));
+        ReturnErrorOnFailure(verifier.Serialize(serialized_span));
+
+        std::memcpy(verifier_buf.data(), serialized_verifier, out_verifier_len);
+        verifier_buf.reduce_size(out_verifier_len);
+        return CHIP_NO_ERROR;
+    }
+
+    CHIP_ERROR GetSetupPasscode(uint32_t &setup_passcode) override
+    {
+        setup_passcode = k_setup_passcode;
+        return CHIP_NO_ERROR;
+    }
+
+    CHIP_ERROR SetSetupPasscode(uint32_t setup_passcode) override
+    {
+        (void) setup_passcode;
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+};
+
+static CaregiverCommissionableDataProvider s_commissionable_data_provider;
 
 static void apply_wifi_tx_power_limit()
 {
@@ -133,6 +211,8 @@ extern "C" void app_main()
 
     caregiver_endpoint_id = endpoint::get_id(endpoint);
     ESP_LOGI(TAG, "CaregiverCall Matter endpoint created: endpoint_id=%u", caregiver_endpoint_id);
+
+    esp_matter::set_custom_commissionable_data_provider(&s_commissionable_data_provider);
 
     err = esp_matter::start(app_event_cb);
     ESP_ERROR_CHECK(err);

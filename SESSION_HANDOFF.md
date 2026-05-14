@@ -4,6 +4,8 @@
 
 ## Entries
 
+- 2026-05-14: [Pairing code update](docs/session_handoffs/2026-05-14-pairing-code-update.md)
+  - Matter PIN was changed to `73948261`, manual pairing code to `35642145134`, custom commissionable data provider was added, and the updated firmware was flashed to COM3.
 - 2026-05-11: [Firmware commissioning and button verification](docs/session_handoffs/2026-05-11-firmware-commissioning-and-button.md)
   - BLE/CHIPoBLE 커미셔닝, ESP32-C3 Super Mini Wi-Fi 전력 제한, `GPIO4` 버튼 입력 처리, COM3 업로드와 Google Home Matter 전송 검증 결과를 정리했습니다.
 - 2026-05-08: [Firmware skeleton](docs/session_handoffs/2026-05-08-firmware-skeleton.md)
