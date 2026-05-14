@@ -26,7 +26,7 @@
 
 ![Google Home add menu](assets/google_home_setup/02-add-menu.jpg)
 
-3. `Google Home에 기기 추가` 화면에서 `QR 코드 스캔`을 선택합니다. QR 코드가 없거나 직접 입력해야 하는 경우에도 이 흐름에서 Matter 코드를 입력할 수 있습니다.
+3. `Google Home에 기기 추가` 화면에서 `기기 검색`을 선택합니다. Google Home이 주변의 Matter 기기를 검색한 뒤, 선택한 기기에 대해 페어링 코드를 입력하는 흐름으로 이어집니다.
 
 ![Google Home add device](assets/google_home_setup/03-add-device.jpg)
 
